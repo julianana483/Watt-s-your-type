@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Watt’s your Type?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ebeefa;
+            color: #00b03b;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            color: #504495;
+        }
+        button {
+            background-color: #504495;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 15px auto;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #3b357a;
+        }
+        .answer-option {
+            background-color: white;
+            border: 2px solid #504495;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px auto;
+            width: 90%;
+            max-width: 350px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .answer-option:hover {
+            background-color: #ddd;
+        }
+        .section {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        img {
+            max-width: 90%;
+            height: auto;
+            margin: 20px 0;
+        }
+        .result p {
+            margin: 10px 0;
+        }
+        .contact-link {
+            margin-top: 15px;
+            font-size: 16px;
+        }
+        .contact-link a {
+            color: #504495;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .contact-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Watt’s your Type?</h1>
+    <p>Discover your energy-saving personality!</p>
+
+    <div id="quizSection" class="section active">
+        <div id="quiz"></div>
+        <button id="nextButton">Start Quiz</button>
+    </div>
+
+    <div id="resultSection" class="section">
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            { question: "How do you usually turn off your devices?", answers: ["I unplug everything.", "I use a power strip.", "I leave things on standby."], scores: [3,2,1] },
+            { question: "How long are your showers?", answers: ["Less than 5 minutes.", "5-10 minutes.", "As long as I enjoy my music."], scores: [3,2,1] },
+            { question: "How do you dry your clothes?", answers: ["I air-dry them.", "I mix dryer and air-dry.", "I mostly use a dryer."], scores: [3,2,1] },
+            { question: "How do you wash your clothes?", answers: ["Cold water only.", "Warm water sometimes.", "Hot water mostly."], scores: [3,2,1] },
+            { question: "Do you turn off lights when leaving a room?", answers: ["Always!", "Sometimes.", "Rarely."], scores: [3,2,1] }
+        ];
+
+        let currentQuestion = 0;
+        let totalScore = 0;
+
+        const quizContainer = document.getElementById('quiz');
+        const nextButton = document.getElementById('nextButton');
+        const quizSection = document.getElementById('quizSection');
+        const resultSection = document.getElementById('resultSection');
+        const resultContainer = document.getElementById('result');
+
+        function showQuestion() {
+            const q = quizData[currentQuestion];
+            quizContainer.innerHTML = `
+                <h2>${q.question}</h2>
+                ${q.answers.map((answer, i) => `
+                    <div class="answer-option" onclick="selectAnswer(${q.scores[i]})">${answer}</div>
+                `).join('')}
+            `;
+        }
+
+        function selectAnswer(score) {
+            totalScore += score;
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        nextButton.addEventListener('click', () => {
+            nextButton.style.display = 'none';
+            showQuestion();
+        });
+
+        function showResult() {
+            quizSection.classList.remove("active");
+            resultSection.classList.add("active");
+
+            let title = '';
+            let description = '';
+            let message = '';
+            let imgSrc = '';
+            let spotifyLink = '';
+
+            if (totalScore >= 13) {
+                title = 'The Conscious Saver';
+                description = "Good for you! And others! You are part of the change and are also contributing to saving money in your house!";
+                message = "For the conscious saver: Bath time is great! You could enjoy this song while showering and keeping the good habits.";
+                imgSrc = 'picture 2.jpg';
+                spotifyLink = 'https://open.spotify.com/intl-es/track/6BrMEbPSSj55nQhkgf6DnE';
+            } else if (totalScore >= 9) {
+                title = 'The Efficient Optimizer';
+                description = "You have good intentions and those could be better actions! Try small adjustments to reduce energy use even more.";
+                message = "For the efficient optimizer: You are doing good but could be better! Use this song as your showering time guide.";
+                imgSrc = 'picture 3.jpg';
+                spotifyLink = 'https://open.spotify.com/intl-es/track/3ovjw5HZZv43SxTwApooCM?si=3ea279bee2c6434e';
+            } else {
+                title = 'The Chill Consumer';
+                description = "Oh oh... you could do better! Try starting with one small habit at a time to build change.";
+                message = "For the chill consumer: Oh oh you could enjoy your shower while making more impact! Let this song be your everyday companion.";
+                imgSrc = 'picture 1.jpg';
+                spotifyLink = 'https://open.spotify.com/intl-es/track/2374M0fQpWi3dLnB54qaLX?si=07fbb52d24124fab';
+            }
+
+            resultContainer.innerHTML = `
+                <h2>${title}</h2>
+                <p>${description}</p>
+                <p>${message}</p>
+                <a href="${spotifyLink}" target="_blank">Listen on Spotify</a><br>
+                <img src="${imgSrc}" alt="${title}">
+                <div class="contact-link">
+                    <p>If you want more information contact us! 
+                    <a href="https://www.015duurzaam.info/?gad_source=1&gad_campaignid=21799967519&gbraid=0AAAAADDBtxHs_6OdA11x-BE_tcCXOb0PF&gclid=CjwKCAjwpMTCBhA-EiwA_-MsmZaS4aY8azWqUbfde7iexcS5vv5YY0XxB42UnACAw127V_effedQdhoCK8YQAvD_BwE" target="_blank">015Duurzaam</a></p>
+                </div>
+            `;
+        }
+
+        window.selectAnswer = selectAnswer;
+    </script>
+</body>
+</html>
